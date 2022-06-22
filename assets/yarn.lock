@@ -2688,6 +2688,12 @@ pbkdf2@^3.0.3:
 "phoenix@file:../deps/phoenix":
   version "1.6.10"
 
+"phoenix_html@file:../deps/phoenix_html":
+  version "3.2.0"
+
+"phoenix_live_view@file:../deps/phoenix_live_view":
+  version "0.17.10"
+
 posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
