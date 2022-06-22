@@ -15,11 +15,11 @@ defmodule GrapgqlWeb.Router do
     plug Grapgql.Plugs.GraphAuth
   end
 
-  # scope "/", GrapgqlWeb do
-  #   pipe_through :browser
+  scope "/", GrapgqlWeb do
+    pipe_through :browser
 
-  #   get "/", PageController, :index
-  # end
+    get "/", PageController, :index
+  end
 
   # scope "graphiql" do
   #   forward "/", Absinthe.Plug.GraphiQL,
@@ -49,15 +49,15 @@ defmodule GrapgqlWeb.Router do
   # If your application does not have an admins-only section yet,
   # you can use Plug.BasicAuth to set up some basic authentication
   # as long as you are also using SSL (which you should anyway).
-  # if Mix.env() in [:dev, :test] do
-  #   import Phoenix.LiveDashboard.Router
+  if Mix.env() in [:dev, :test] do
+    import Phoenix.LiveDashboard.Router
 
-  #   scope "/" do
-  #     pipe_through :browser
+    scope "/" do
+      pipe_through :browser
 
-  #     live_dashboard "/dashboard", metrics: GrapgqlWeb.Telemetry
-  #   end
-  # end
+      live_dashboard "/dashboard", metrics: GrapgqlWeb.Telemetry
+    end
+  end
 
   # Enables the Swoosh mailbox preview in development.
   #
