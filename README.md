@@ -1,8 +1,29 @@
 # Elixir Phoneix Grapgql example app 
 
 # Dev env setup
-
 1. Install elixir 
+
+2. Install elixir  via asdf
+
+``` 
+Installation via asdf 
+
+https://asdf-vm.com/guide/getting-started.html#_2-download-asdf
+
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
+
+Add the following to ~/.bashrc:
+
+  . $HOME/.asdf/asdf.sh
+
+install plugins
+
+1. asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
+
+2. asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
+
+```
+
 
 3. Install dependencies and run setup
 # Install elixir dependencies

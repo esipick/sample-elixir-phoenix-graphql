@@ -109,7 +109,7 @@ defmodule Grapgql.Accounts do
             {:error, "email not found"}
         user ->
             with {:ok, user} <- Encryption.validate_password(user, password),
-                    {:ok, token, _} = Authentication.encode_and_sign(user,%{claim: "W08aAGGsKHoc0iIdF0Bp"}, token_type: "refresh", ttl: {2045555666, :minutes}) do
+                    {:ok, token, _} = Authentication.encode_and_sign(user,%{claim: "W08aAGGsKHoc0iIdF0Bp"}, token_type: "refresh", ttl: {Application.get_env(:grapgql, :jwt_expiration_minutes), :minutes}) do
 
                 {:ok, %{:user => user, :token => token}}
             end
