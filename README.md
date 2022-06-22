@@ -13,7 +13,7 @@ mix deps.compile
 # Setup database
 mix ecto.setup
 
-## Bootstrap first school and user on a new server
+## Bootstra  user on a new server
 
 ```bash
 mix run priv/repo/seeds.exs # is also running automatically with mix ecto.setup
