@@ -1,12 +1,17 @@
 {
-  "name": "assets",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "repository": {},
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "brunch build --production",
+    "watch": "brunch watch --stdin"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "dependencies": {
+    "phoenix": "file:../deps/phoenix"
+  },
+  "devDependencies": {
+    "babel-brunch": "6.1.1",
+    "brunch": "2.10.9",
+    "clean-css-brunch": "2.10.0",
+    "uglify-js-brunch": "2.10.0"
+  }
 }
