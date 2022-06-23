@@ -22,8 +22,8 @@ defmodule Grapgql.Accounts.User do
     |> cast(attrs, [:username, :email, :password, :first_name, :last_name])
     |> validate_required([:username, :email,:first_name, :last_name])
     |> validate_format(:email, ~r/@/)
-    |> unique_constraint(:email)
     |> validate_confirmation(:password)
+    |> unique_constraint(:email, message: "already exist")
     |> encrypt_password
   end
 
