@@ -47,9 +47,11 @@ window.liveSocket = liveSocket
 
 import Greeter from "./index";
 import SignInSide from "./components/auth/login";
+import Register from "./components/auth/register";
 
 
 window.Components = {
   Greeter,
-  SignInSide
+  SignInSide,
+  Register
 }

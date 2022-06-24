@@ -74,30 +74,9 @@ export default SignInSide = () => {
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               {/* <LockOutlinedIcon /> */}
             </Avatar>
-            { isSignUp ? <Typography component="h1" variant="h5">
-              Sign Up
-            </Typography> : <Typography component="h1" variant="h5">
+             <Typography component="h1" variant="h5">
               Sign in
-            </Typography> } 
-            {
-              isSignUp ? (<TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="login"
-                  name="email"
-                  autoFocus
-                />) : (<TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Signup"
-                  name="email"
-                  autoFocus
-                />)
-            }
+            </Typography> 
            
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                 <TextField
@@ -113,41 +92,12 @@ export default SignInSide = () => {
                   margin="normal"
                   required
                   fullWidth
-                  id="fname"
-                  label="First Name"
-                  name="firstName"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="lname"
-                  label="Last Name"
-                  name="lastname"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
                   name="password"
                   label="Password"
                   type="password"
                   id="password"
                   autoComplete="current-password"
                 />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="confirm Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-              
                 <Button
                   type="submit"
                   fullWidth
@@ -158,7 +108,7 @@ export default SignInSide = () => {
                 </Button>
                 <Grid container>
                   <Grid item>
-                  <Button onClick={handleFormToggle()}   variant="text">Sign In</Button>
+                  <Link href="/register"  variant="text">Sign Up</Link>
                   </Grid>
                 </Grid>
                 <Copyright sx={{ mt: 5 }} />
