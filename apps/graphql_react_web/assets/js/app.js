@@ -45,13 +45,14 @@ liveSocket.connect()
 window.liveSocket = liveSocket
 
 
-import Greeter from "./index";
-import SignInSide from "./components/auth/login";
-import Register from "./components/auth/register";
-
+import SignInSide from "./webpack_build/components/auth/login";
+import Register from "./webpack_build/components/auth/register";
+import NavBar from "./webpack_build/components/NavBar/index";
+import Home from './webpack_build/pages/Home'
 
 window.Components = {
-  Greeter,
   SignInSide,
-  Register
+  Register,
+  Home,
+  NavBar
 }

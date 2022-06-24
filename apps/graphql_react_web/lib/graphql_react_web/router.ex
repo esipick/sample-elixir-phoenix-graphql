@@ -20,6 +20,7 @@ defmodule GraphqlReactWeb.Router do
 
     get "/", PageController, :index
     get "/register", PageController, :register
+    get "/home", PageController, :home
   end
   scope "/api" do
     pipe_through :api

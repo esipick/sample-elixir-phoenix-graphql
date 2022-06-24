@@ -74,10 +74,9 @@ export default SignInSide = () => {
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               {/* <LockOutlinedIcon /> */}
             </Avatar>
-             <Typography component="h1" variant="h5">
-              Sign in
-            </Typography> 
-           
+           <Typography component="h1" variant="h5">
+              Sign Up
+            </Typography>  
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                 <TextField
                   margin="normal"
@@ -92,12 +91,41 @@ export default SignInSide = () => {
                   margin="normal"
                   required
                   fullWidth
+                  id="fname"
+                  label="First Name"
+                  name="firstName"
+                  autoFocus
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="lname"
+                  label="Last Name"
+                  name="lastname"
+                  autoFocus
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
                   name="password"
                   label="Password"
                   type="password"
                   id="password"
                   autoComplete="current-password"
                 />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="confirm Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+              
                 <Button
                   type="submit"
                   fullWidth
@@ -108,7 +136,7 @@ export default SignInSide = () => {
                 </Button>
                 <Grid container>
                   <Grid item>
-                  <Link href="/register"  variant="text">Sign Up</Link>
+                  <Link href="/register"   variant="text">Already have an account ! login in</Link>
                   </Grid>
                 </Grid>
                 <Copyright sx={{ mt: 5 }} />

@@ -10,10 +10,17 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { useState } from 'react';
+import { client } from '../../apollo'
+import { LOGIN } from '../../apollo/requests'
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 // import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { setLSItem } from '../../utils/utils'
 
+// import Alert from '../alert'
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -26,7 +33,9 @@ function Copyright(props) {
     </Typography>
   );
 }
-
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const theme = createTheme();
 
 
@@ -35,16 +44,29 @@ export default SignInSide = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    // console.log({
+    //   email: data.get('email'),
+    //   password: data.get('password'),
+    // });
+    client.mutate({
+      mutation: LOGIN,
+      variables: { email:data.get('email'), password: data.get('password') },
+
+    }) .then((response) => {
+        console.log(response.data)
+        setLSItem('Access_Token',response.data.login.token)
+        window.location.href="/home"
+    })
+    .catch((err) => console.error(err));
   };
+
   const handleFormToggle = (show) => {
     // setIsSignUp(show)
   }
   return (
+   
     <ThemeProvider theme={theme}>
+     <Alert severity="success">This is a success message!</Alert>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -74,9 +96,10 @@ export default SignInSide = () => {
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               {/* <LockOutlinedIcon /> */}
             </Avatar>
-           <Typography component="h1" variant="h5">
-              Sign Up
-            </Typography>  
+             <Typography component="h1" variant="h5">
+              Sign in
+            </Typography> 
+           
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                 <TextField
                   margin="normal"
@@ -85,25 +108,7 @@ export default SignInSide = () => {
                   id="email"
                   label="Email Address"
                   name="email"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="fname"
-                  label="First Name"
-                  name="firstName"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="lname"
-                  label="Last Name"
-                  name="lastname"
-                  autoFocus
+                  
                 />
                 <TextField
                   margin="normal"
@@ -115,17 +120,6 @@ export default SignInSide = () => {
                   id="password"
                   autoComplete="current-password"
                 />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="confirm Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-              
                 <Button
                   type="submit"
                   fullWidth
@@ -136,7 +130,7 @@ export default SignInSide = () => {
                 </Button>
                 <Grid container>
                   <Grid item>
-                  <Link href="/"   variant="text">Sign In</Link>
+                  <Link href="/register"   variant="text">Don't have an account! Sign up</Link>
                   </Grid>
                 </Grid>
                 <Copyright sx={{ mt: 5 }} />
