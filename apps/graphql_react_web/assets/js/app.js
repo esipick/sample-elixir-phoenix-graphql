@@ -21,6 +21,7 @@ import "../css/app.css"
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
+import "react-phoenix"
 // Establish Phoenix Socket and LiveView configuration.
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
@@ -43,10 +44,12 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
-import React from "react";
-import ReactDOM from "react-dom";
 
 import Greeter from "./index";
+import SignInSide from "./components/auth/login";
 
-const greeting = document.getElementById("greeting");
-ReactDOM.render(<Greeter name="Phoenix" />, greeting);
+
+window.Components = {
+  Greeter,
+  SignInSide
+}

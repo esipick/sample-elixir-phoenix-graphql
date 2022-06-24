@@ -46,6 +46,7 @@ defmodule GraphqlReact.MixProject do
       {:guardian, "~> 2.0"},
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 0.12.1"},
+      {:react_phoenix, "~> 1.3"}
     ]
   end
 
