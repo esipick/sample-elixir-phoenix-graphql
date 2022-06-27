@@ -23,8 +23,9 @@ module.exports = (env, options) => ({
       './js/app.js': ['./js/app.js']
   },
   output: {
-    filename: 'webpack_app.js',
-    path: path.resolve(__dirname, '../priv/static/js')
+    filename: '[name].js',
+    path: path.resolve(__dirname, '../priv/static/js'),
+    publicPath: '/js/'
   },
   module: {
     rules: [
@@ -36,8 +37,15 @@ module.exports = (env, options) => ({
         }
       },
       {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader']
+        test: /\.[s]?css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.(ttf|eot|svg|otf|woff|gif|png)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: 'file-loader',
+        options: {
+          outputPath: '../css',
+        }
       }
     ]
   },
