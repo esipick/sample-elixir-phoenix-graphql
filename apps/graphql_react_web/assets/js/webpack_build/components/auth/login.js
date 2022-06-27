@@ -14,11 +14,12 @@ import { client } from '../../apollo'
 import { LOGIN } from '../../apollo/requests'
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
+import FormHelperText from '@mui/material/FormHelperText';
 import MuiAlert from '@mui/material/Alert';
 // import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { setLSItem } from '../../utils/utils'
+import { setLSItem , getLSItem} from '../../utils/utils'
 
 // import Alert from '../alert'
 function Copyright(props) {
@@ -26,7 +27,7 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="">
-        Your Website
+      Elixir React Graphql Example App 
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -40,14 +41,12 @@ const theme = createTheme();
 
 
 export default SignInSide = () => {
-  const [isSignUp, setIsSignUp] = useState(false)
+
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('')
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
     client.mutate({
       mutation: LOGIN,
       variables: { email:data.get('email'), password: data.get('password') },
@@ -55,18 +54,29 @@ export default SignInSide = () => {
     }) .then((response) => {
         console.log(response.data)
         setLSItem('Access_Token',response.data.login.token)
+        setLSItem('USER',response.data.login.user)
         window.location.href="/home"
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      setErrorMessage(err.message)
+    });
   };
 
   const handleFormToggle = (show) => {
     // setIsSignUp(show)
   }
+
+  React.useEffect(()=>{
+    const token = getLSItem('Access_Token')
+    if(token){
+      window.location.href="/home"
+    }
+    return;
+  },[])
   return (
    
     <ThemeProvider theme={theme}>
-     <Alert severity="success">This is a success message!</Alert>
+     {/* <Alert severity="success">This is a success message!</Alert> */}
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -120,13 +130,14 @@ export default SignInSide = () => {
                   id="password"
                   autoComplete="current-password"
                 />
+                <FormHelperText style={{ color: 'red'}} variant="standard" id="component-error-text">{errorMessage}</FormHelperText>
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  Sign Up
+                  Sign In
                 </Button>
                 <Grid container>
                   <Grid item>

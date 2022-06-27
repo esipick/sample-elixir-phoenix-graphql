@@ -17,12 +17,13 @@ import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { client } from '../../apollo'
 import { GET_USER_INFO } from '../../apollo/requests'
+import { setLSItem , getLSItem} from '../../utils/utils'
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="#">
+        Elixir React Graphql Example App 
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -36,12 +37,26 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const theme = createTheme();
 
 export default function Album() {
+
   React.useEffect(() => {
+    const token = getLSItem('Access_Token')
+    if(!token){
+      window.location.href="/"
+    }
     client
     .query({
       query: GET_USER_INFO,
     })
-    .then((response) => console.log(response.data))
+    .then((response) => { 
+      let user = {
+        userName: response.data.getUser.username,
+        email: response.data.getUser.email,
+        firstName: response.data.getUser.firstName,
+        LastName: response.data.getUser.lastName,
+      }
+      
+      setLSItem('USER',response.data.getUser)
+    })
     .catch((err) => console.error(err));
   
   }, []);
@@ -65,7 +80,7 @@ export default function Album() {
               color="text.primary"
               gutterBottom
             >
-              Album layout
+             Welcome To Elixir React App
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
               Something short and leading about the collection below—its contents,
@@ -122,7 +137,7 @@ export default function Album() {
       {/* Footer */}
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
-          Footer
+         
         </Typography>
         <Typography
           variant="subtitle1"
@@ -130,7 +145,6 @@ export default function Album() {
           color="text.secondary"
           component="p"
         >
-          Something here to give the footer a purpose!
         </Typography>
         <Copyright />
       </Box>
