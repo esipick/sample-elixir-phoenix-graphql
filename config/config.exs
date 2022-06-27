@@ -42,7 +42,7 @@ config :esbuild,
   version: "0.14.29",
   default: [
     args:
-      ~w(js/app.js --bundle --target=es2017 --loader:.js=jsx --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+      ~w(js/app.js --bundle --target=es2017 --loader:.js=jsx --outdir=../priv/static/assets --external:/fonts/* --external:/images/* ),
     cd: Path.expand("../apps/graphql_react_web/assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
 
