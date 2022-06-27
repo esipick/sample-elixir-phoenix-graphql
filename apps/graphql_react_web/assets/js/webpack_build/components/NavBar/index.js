@@ -12,11 +12,14 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 // import AdbIcon from '@mui/icons-material/Adb';
-
+import { getLSItem } from '../../utils/utils';
+// import PhxLogo  from '../images/logo.png'
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const NavBar = () => {
+   
+    const [user, setUser] = React.useState(null)
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
   
@@ -34,6 +37,20 @@ const NavBar = () => {
     const handleCloseUserMenu = () => {
       setAnchorElUser(null);
     };
+
+    React.useEffect(()=>{
+      
+      const user = getLSItem('USER');
+      
+      if(user){
+        setUser(user)
+      }
+    },[])
+
+    const logout = () => {
+      localStorage.clear()
+      window.location.href="/"
+    }
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -54,7 +71,7 @@ const NavBar = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+             <Avatar alt="Remy Sharp" src="" />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -110,10 +127,10 @@ const NavBar = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+           <Avatar alt="Phoneix" src="" />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {/* {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -121,13 +138,16 @@ const NavBar = () => {
               >
                 {page}
               </Button>
-            ))}
+            ))} */}
+            <Typography sx={{ my: 2, color: 'white', display: 'block' }}>
+              { user ?  ('welcome' + '  '+ user.firstName ) : ''}
+            </Typography>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src={"https://source.unsplash.com/random"} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -146,11 +166,15 @@ const NavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {/* {settings.map((setting) => (
+                <MenuItem  key={setting} onClick={handleCloseUserMenu}>
+                  <Typography  textAlign="center">{setting}</Typography>
                 </MenuItem>
-              ))}
+              ))} */}
+              <MenuItem  onClick={logout}>
+                  <Typography  textAlign="center">Logout</Typography>
+                </MenuItem>
+
             </Menu>
           </Box>
         </Toolbar>
