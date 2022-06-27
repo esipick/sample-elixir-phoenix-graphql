@@ -25,7 +25,7 @@ defmodule GraphqlReact.Plugs.GraphAuth do
               %{}
           end
       else
-          _ -> %{}
+          _ ->  %{}
       end
   end
 
