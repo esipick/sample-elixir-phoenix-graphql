@@ -20,7 +20,7 @@ config :graphql_react_web, GraphqlReactWeb.Endpoint,
       cache_static_manifest: "priv/static/cache_manifest.json",
       secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
-config :fboss, Fboss.Repo,
+config :graphql_react_web, GraphqlReact.Repo,
        url: System.get_env("DATABASE_URL"),
        pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
        ssl: true
