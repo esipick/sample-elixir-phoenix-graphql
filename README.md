@@ -58,3 +58,12 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+
+  # deployment on Heroku 
+  add follwong build packs
+  
+  https://github.com/HashNuke/heroku-buildpack-elixir.git
+  https://github.com/gjaldon/heroku-buildpack-phoenix-static.git
+  https://github.com/heymackey/heroku-phoenix-umbrella-static-buildpack
+  
