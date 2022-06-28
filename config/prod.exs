@@ -26,6 +26,8 @@ config :graphql_react_web, GraphqlReact.Repo,
        ssl: true
 
 
+config :graphql_react, :jwt_expiration_minutes, String.to_integer(System.get_env("JWT_EXPIRATION_MINUTES") || "2045555666")
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

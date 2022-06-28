@@ -53,7 +53,7 @@ export default SignInSide = () => {
       } },
 
     }) .then((response) => {
-        window.location.href="/login"
+        window.location.href="/"
     })
     .catch((err) => console.error(err));
     
