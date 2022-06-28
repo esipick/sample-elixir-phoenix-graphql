@@ -11,6 +11,8 @@ defmodule GraphqlReactWeb.Router do
   end
 
   pipeline :api do
+
+    plug CORSPlug, origin: "*", headers: [CORSPlug.defaults()[:headers]]
     plug :accepts, ["json"]
     plug GraphqlReact.Plugs.GraphAuth
   end

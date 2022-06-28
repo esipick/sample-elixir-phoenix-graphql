@@ -26,7 +26,15 @@ config :graphql_react_web, GraphqlReact.Repo,
        ssl: true
 
 
+
+config :graphql_react, GraphqlReact.Mailer,
+      adapter: Bamboo.SendGridAdapter,
+      api_key: System.get_env("SENDGRID_API_KEY")
+
 config :graphql_react, :jwt_expiration_minutes, String.to_integer(System.get_env("JWT_EXPIRATION_MINUTES") || "2045555666")
+
+config :graphql_react, :registration_email_confirmation_template, System.get_env("EMAIL_CONFIRMATION_TEMP_ID") || "d-33a8aeb6a18445e29ed7f390942b9254"
+
 
 # ## SSL Support
 #
