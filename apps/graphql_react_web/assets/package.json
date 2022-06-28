@@ -28,6 +28,12 @@
     "file-loader": "^4.2.0",
     "css-loader": "^3.4.2",
     "webpack": "4.41.5",
-    "webpack-cli": "^3.3.2"
+    "webpack-cli": "^3.3.2",
+    "clean-css-brunch": "2.10.0",
+    "copy-webpack-plugin": "^4.5.0",
+    "mini-css-extract-plugin": "^0.4.0",
+    "optimize-css-assets-webpack-plugin": "^4.0.0",
+    "uglify-js-brunch": "2.10.0",
+    "uglifyjs-webpack-plugin": "^1.2.4"
   }
 }
