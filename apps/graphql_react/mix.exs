@@ -47,10 +47,8 @@ defmodule GraphqlReact.MixProject do
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 0.12.1"},
       {:react_phoenix, "~> 1.3"},
-      {:cors_plug, "~> 2.0"},
+      {:cors_plug, "~> 3.0"},
       {:bamboo, "~> 1.5"},
-      {:plug, "~> 1.0"},
-      {:corsica, "~> 1.0"}
     ]
   end
 
