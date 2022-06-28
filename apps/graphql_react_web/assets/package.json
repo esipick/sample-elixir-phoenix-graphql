@@ -1,4 +1,11 @@
 {
+  
+    "name": "example-app",
+    "author": "Kashan ghori",
+    "email": "email",
+    "license": "esipick",
+    "version": "0.0.1",
+    "private": true,
   "scripts": {
     "deploy": "webpack --mode production",
     "watch": "webpack --mode development --watch"
