@@ -20,7 +20,7 @@ import "../css/app.css"
 //
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
-import "phoenix_html"
+// import "phoenix_html"
 import "react-phoenix"
 // Establish Phoenix Socket and LiveView configuration.
 import {Socket} from "phoenix"
