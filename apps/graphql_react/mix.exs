@@ -48,7 +48,9 @@ defmodule GraphqlReact.MixProject do
       {:bcrypt_elixir, "~> 0.12.1"},
       {:react_phoenix, "~> 1.3"},
       {:cors_plug, "~> 2.0"},
-      {:bamboo, "~> 1.5"}
+      {:bamboo, "~> 1.5"},
+      {:plug, "~> 1.0"},
+      {:corsica, "~> 1.0"}
     ]
   end
 
