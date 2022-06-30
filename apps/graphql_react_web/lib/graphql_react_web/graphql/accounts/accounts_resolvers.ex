@@ -7,6 +7,7 @@ defmodule GraphqlReactWeb.GraphQL.Accounts.AccountsResolvers do
     IO.inspect args
      case Accounts.create_user(args.input) do
       {:ok, result} ->
+        Accounts.sendMail(result)
         {:ok, result}
       {:error, _error, error, %{}} ->
         {:error, error}

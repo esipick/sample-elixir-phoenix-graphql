@@ -81,3 +81,5 @@ config :graphql_react, GraphqlReact.Mailer,
 config :graphql_react, :jwt_expiration_minutes, String.to_integer(System.get_env("JWT_EXPIRATION_MINUTES") || "2045555666")
 
 config :graphql_react, :registration_email_confirmation_template, System.get_env("EMAIL_CONFIRMATION_TEMP_ID") || "d-33a8aeb6a18445e29ed7f390942b9254"
+config :graphql_react, :from_email, System.get_env("FROM_EMAIL") || "kashan.ghori@esipick.com"
+config :graphql_react, :from_email_name, System.get_env("FROM_EMAIL_NAME") || "Esipick"

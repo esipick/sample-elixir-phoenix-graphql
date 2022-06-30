@@ -9,6 +9,8 @@ defmodule GraphqlReact.Accounts do
   alias GraphqlReact.Accounts.User
   alias GraphqlReact.Accounts.Authentication
   alias GraphqlReact.Accounts.Encryption
+  alias GraphqlReact.Email
+
   @doc """
   Returns the list of users.
 
@@ -125,4 +127,11 @@ defmodule GraphqlReact.Accounts do
   def get_user_by_email(email) do
     Repo.get_by(User, [email: email])
   end
+
+
+  def sendMail(result) do
+    name = "#{result.first_name} #{result.last_name}"
+    Email.send_marketing_email(result.email,name)
+  end
+
 end
