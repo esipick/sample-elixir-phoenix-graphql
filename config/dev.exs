@@ -83,13 +83,3 @@ config :graphql_react, :jwt_expiration_minutes, String.to_integer(System.get_env
 config :graphql_react, :website_url, System.get_env("WEBSITE_URL") || "http://localhost:4000"
 config :graphql_react, :react_url, System.get_env("REACT_URL") || "http://localhost:3000"
 config :graphql_react, :angular_url, System.get_env("ANGULAR_URL") || "http://localhost:4200"
-
-
-
-config :graphql_react, :registration_email_confirmation_template, System.get_env("EMAIL_CONFIRMATION_TEMP_ID") || "d-33a8aeb6a18445e29ed7f390942b9254"
-config :graphql_react, :from_email, System.get_env("FROM_EMAIL") || "kashan.ghori@esipick.com"
-config :graphql_react, :from_email_name, System.get_env("FROM_EMAIL_NAME") || "Esipick"
-config :graphql_react, :reset_password_email_template_id, System.get_env("RESET_PASSWORD_EMAIL_TEMPLATE_ID") || "d-3f6b449bd78d4cf787bac2b817fb6ed5"
-config :graphql_react, :update_user_settings_id, System.get_env("UPDATE_USER_SETTINGS") || "d-97397e5023454c78ae2cb972c7984d4a"
-config :graphql_react, :email_verification_id, System.get_env("EMAIL_VERIFICATION") || "d-7fb1757640024223b7ad65e36cc25880"
-config :graphql_react, :change_email_temp_id, System.get_env("CHANGE_EMAIL_TEMP_ID") || "d-b840397ba0fb463c942c6bcac58d07b4"
