@@ -9,7 +9,13 @@ defmodule GraphqlReact.Accounts do
   alias GraphqlReact.Accounts.User
   alias GraphqlReact.Accounts.Authentication
   alias GraphqlReact.Accounts.Encryption
+  alias GraphqlReact.Accounts.PasswordReset
+  alias GraphqlReact.Accounts.Setting
+  alias GraphqlReact.Accounts.Settings
+  alias GraphqlReact.Accounts.UserEmails
+  alias GraphqlReact.Accounts.UserEmail
   alias GraphqlReact.Email
+  alias GraphqlReact.Helpers
 
   @doc """
   Returns the list of users.
@@ -54,11 +60,30 @@ defmodule GraphqlReact.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
+
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
+    |> add_setting(attrs.platform)
+
   end
 
+  def add_setting(attar, platform) do
+    case attar do
+      {:ok, user } ->
+        setting_attrs = %{
+          platform: platform,
+          user_id: user.id
+        }
+        %Setting{}
+        |> Setting.changeset(setting_attrs)
+        |> Repo.insert()
+        |> send_email_verification(user)
+        {:ok, user }
+      {:error, error} ->
+        {:error, error}
+    end
+  end
   @doc """
   Updates a user.
 
@@ -129,9 +154,234 @@ defmodule GraphqlReact.Accounts do
   end
 
 
+  def check_user(email) do
+    user = get_by_email(email)
+
+    cond do
+
+      user ->
+        {:ok, reset} = create_password_reset(user)
+
+        reset
+        |> Repo.preload(:user)
+        |> Email.reset_password_email()
+        |> GraphqlReact.Mailer.deliver_later
+
+        {:ok, "Please check your email for password reset instructions."}
+
+      user == nil ->
+        {:error, "This email is not registered"}
+    end
+  end
+
+  def create_password_reset(user) do
+    case delete_all_existing_user_codes(user.id) do
+      nil->
+        password_reset_code(user)
+      codes->
+       password_reset_code(user)
+    end
+ end
+
+def delete_all_existing_user_codes(user_id) do
+    from(p in PasswordReset, where: p.user_id == ^user_id) |> Repo.delete_all
+end
+
+def password_reset_code(user) do
+    %PasswordReset{}
+    |> PasswordReset.changeset(%{user_id: user.id, code: Helpers.hex(5)})
+    |> Repo.insert()
+  end
+
+def reset_password(attrs) do
+    case get_reset_code(attrs.code) do
+      nil->
+        {:error, "Code does not exist"}
+      code->
+        case update_user(code.user , %{password: attrs.password, password_confirmation: attrs.password_confirmation}) do
+          nil->
+            {:error, "Unable to reset password"}
+          user->
+            delete_all_existing_user_codes(code.user_id)
+            {:ok, "Password has been reset"}
+        end
+    end
+  end
+
+  def get_reset_code(code) do
+    Repo.get_by(PasswordReset, code: code)
+    |> Repo.preload([:user])
+  end
+
   def sendMail(result) do
     name = "#{result.first_name} #{result.last_name}"
     Email.send_marketing_email(result.email,name)
+  end
+
+
+  def update_email(args , user) do
+    cond do
+      args.email == user.email ->
+        {:error, "new email is same as old email"}
+      true ->
+        change_attr = %{
+          email: args.email
+        }
+
+        send_email_verification_mail(args.email,user,"/settings-update-email")
+            # {:ok , code } = get_email_verification_code(user)
+
+            # url = Helpers.get_client_url(user, "/settings-update-email") <> "/#{code.code}"
+            # code
+            # |> Repo.preload(:user)
+            # |> Email.update_email(args.email, url)
+            # |> GraphqlReact.Mailer.deliver_later
+
+            case update_user(user, change_attr)  do
+              {:ok , user } ->
+                update_email_verified(user.id, false)
+                {:ok, "Please check your email for email verification instructions."}
+              {:error , _error } ->
+              {:error, "something went wrong please try again"}
+            end
+
+    end
+  end
+
+  def send_email_verification(_attr, curr_user) do
+    {:ok , code } = get_email_verification_code(curr_user)
+
+    url = Helpers.get_client_url(curr_user, "/email-verification") <> "/#{curr_user.id}" <> "/#{code.code}"
+
+    Email.email_verification(curr_user.email, url)
+    |> GraphqlReact.Mailer.deliver_later
+  end
+
+  def get_email_verification_code(user) do
+    case delete_all_existing_user_codes(user.id) do
+      nil->
+       %PasswordReset{}
+        |> PasswordReset.changeset(%{user_id: user.id, code: Helpers.hex(16)})
+        |> Repo.insert()
+      _codes->
+      %PasswordReset{}
+        |> PasswordReset.changeset(%{user_id: user.id, code: Helpers.hex(16)})
+        |> Repo.insert()
+    end
+  end
+
+  def verfiy_email_code(attr) do
+    case get_reset_code(attr.code) do
+
+      nil->
+
+        {:error, "invalid code or link has expired"}
+
+      code->
+
+        delete_all_existing_user_codes(code.user_id)
+
+        update_email_verified(code.user_id,true)
+
+      {:ok,  "email verified succesfully"}
+
+    end
+  end
+
+  def update_email_verified(userID,isVerified) do
+    setting_attrs = %{
+      email_verified: isVerified,
+      user_id: userID
+    }
+    Settings.get_settings_by_id(userID)
+    |> Settings.update_settings(setting_attrs)
+  end
+
+  def update_password(args, curr_user) do
+    case Encryption.validate_password(curr_user, args.old_password) do
+      {:ok, user} ->
+        case update_user(user , %{password: args.new_password, password_confirmation: args.confirm_new_password}) do
+          nil->
+            {:error, "Unable to reset password"}
+          user->
+            {:ok, "Password has been updated succesfully"}
+        end
+      {:error, _error } ->
+        {:error, "old password is incorrect"}
+    end
+
+  end
+
+  def get_user_emails(user) do
+    e = UserEmail
+    |> where(user_id: ^user.id)
+    |> Repo.all()
+    # |> Repo.preload([:user])
+
+    {:ok , %{user_emails: e }}
+  end
+
+  def add_email(args, curr_user) do
+
+    {:ok , user_emails } = get_user_emails(curr_user)
+
+    email_list = user_emails.user_emails
+      |> Enum.filter(fn(value) -> value.secondary_email == args.email end)
+      |> Enum.map(fn(filtered_value) -> filtered_value  end)
+
+    cond do
+      args.email == curr_user.email ->
+        {:error, "this email is already exisits in your account"}
+
+      length(user_emails.user_emails) == 3 ->
+        {:error, "you can add upto 3 emails only !"}
+      length(email_list) > 0 ->
+        {:error, "This email is already added !"}
+      true ->
+        email_length =  cond do
+          length(user_emails.user_emails) == 0 ->
+            1
+          length(user_emails.user_emails) == 1 ->
+            2
+          length(user_emails.user_emails) == 2 ->
+            3
+        end
+        {:ok , code } = get_email_verification_code(curr_user)
+        new_email = %{
+          secondary_email: args.email,
+          email_no:  email_length,
+          is_verified: false,
+          is_primary: false,
+          user_id: curr_user.id
+        }
+
+        case UserEmails.add_email(new_email) do
+          {:ok, email} ->
+            {:ok , code } = get_email_verification_code(curr_user)
+            url = Helpers.get_client_url(curr_user, "/settings-add-email") <> "/#{code.code}" <> "/#{email.id}"
+            IO.inspect url
+            code
+            |> Repo.preload(:user)
+            |> Email.update_email(args.email, url)
+            |> GraphqlReact.Mailer.deliver_later
+            {:ok, "Email added, please verfiy your new email"}
+          {:error, _} ->
+            {:error, "Failed to add the email"}
+        end
+      end
+  end
+
+  def send_email_verification_mail(email, user, path) do
+
+    {:ok , code } = get_email_verification_code(user)
+
+    url = Helpers.get_client_url(user, path) <> "/#{code.code}"
+    IO.inspect url
+    code
+    |> Repo.preload(:user)
+    |> Email.update_email(email, url)
+    |> GraphqlReact.Mailer.deliver_later
+
   end
 
 end

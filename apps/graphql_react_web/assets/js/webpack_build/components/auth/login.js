@@ -19,7 +19,7 @@ import MuiAlert from '@mui/material/Alert';
 // import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { setLSItem , getLSItem} from '../../utils/utils'
+import { setLSItem, getLSItem } from '../../utils/utils'
 
 // import Alert from '../alert'
 function Copyright(props) {
@@ -27,7 +27,7 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="">
-      Elixir React Graphql Example App 
+        Elixir React Graphql Example App
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -49,34 +49,34 @@ export default SignInSide = () => {
     const data = new FormData(event.currentTarget);
     client.mutate({
       mutation: LOGIN,
-      variables: { email:data.get('email'), password: data.get('password') },
+      variables: { email: data.get('email'), password: data.get('password') },
 
-    }) .then((response) => {
-        console.log(response.data)
-        setLSItem('Access_Token',response.data.login.token)
-        setLSItem('USER',response.data.login.user)
-        window.location.href="/home"
+    }).then((response) => {
+      console.log(response.data.login.user)
+      setLSItem('Access_Token', response.data.login.token)
+      setLSItem('USER', response.data.login.user)
+      window.location.href = "/home"
     })
-    .catch((err) => {
-      setErrorMessage(err.message)
-    });
+      .catch((err) => {
+        setErrorMessage(err.message)
+      });
   };
 
   const handleFormToggle = (show) => {
     // setIsSignUp(show)
   }
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     const token = getLSItem('Access_Token')
-    if(token){
-      window.location.href="/home"
+    if (token) {
+      window.location.href = "/home"
     }
     return;
-  },[])
+  }, [])
   return (
-   
+
     <ThemeProvider theme={theme}>
-     {/* <Alert severity="success">This is a success message!</Alert> */}
+      {/* <Alert severity="success">This is a success message!</Alert> */}
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -106,47 +106,47 @@ export default SignInSide = () => {
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               {/* <LockOutlinedIcon /> */}
             </Avatar>
-             <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h5">
               Sign in
-            </Typography> 
-           
+            </Typography>
+
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-                <FormHelperText style={{ color: 'red'}} variant="standard" id="component-error-text">{errorMessage}</FormHelperText>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Sign In
-                </Button>
-                <Grid container>
-                  <Grid item>
-                  <Link href="/register"   variant="text">Don't have an account! Sign up</Link>
-                  </Grid>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <FormHelperText style={{ color: 'red' }} variant="standard" id="component-error-text">{errorMessage}</FormHelperText>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item>
+                  <Link href="/register" variant="text">Don't have an account! Sign up</Link>
                 </Grid>
-                <Copyright sx={{ mt: 5 }} />
-              </Box>
-           
+              </Grid>
+              <Copyright sx={{ mt: 5 }} />
+            </Box>
+
           </Box>
         </Grid>
       </Grid>

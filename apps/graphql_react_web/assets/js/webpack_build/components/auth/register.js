@@ -22,7 +22,7 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="">
-      Elixir React Graphql Example App 
+        Elixir React Graphql Example App
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -33,7 +33,7 @@ function Copyright(props) {
 const theme = createTheme();
 
 const errorMessage = (message) => {
-  return (<FormHelperText style={{ color: 'red'}} variant="standard" id="component-error-text">{message}</FormHelperText>)
+  return (<FormHelperText style={{ color: 'red' }} variant="standard" id="component-error-text">{message}</FormHelperText>)
 }
 export default SignInSide = () => {
   const [password, setPassword] = useState('')
@@ -43,28 +43,31 @@ export default SignInSide = () => {
     const data = new FormData(event.currentTarget);
     client.mutate({
       mutation: REGISTER_USER,
-      variables: {input: {
-        email: data.get('email'),
-        username: data.get('username'),
-        firstName: data.get('firstName'),
-        lastName: data.get('lastName'),
-        password: data.get('password'),
-        passwordConfirmation: data.get('passwordConfirmation'),
-      } },
+      variables: {
+        input: {
+          email: data.get('email'),
+          username: data.get('username'),
+          firstName: data.get('firstName'),
+          lastName: data.get('lastName'),
+          password: data.get('password'),
+          passwordConfirmation: data.get('passwordConfirmation'),
+          platform: "ELIXIR_REACT"
+        }
+      },
 
-    }) .then((response) => {
-        window.location.href="/"
+    }).then((response) => {
+      window.location.href = "/"
     })
-    .catch((err) => console.error(err));
-    
+      .catch((err) => console.error(err));
+
   };
   const handleFormToggle = (show) => {
     // setIsSignUp(show)
   }
   const checkPasswrod = (cp) => {
-    if(password !== cp){
+    if (password !== cp) {
       setIsValid(true)
-    } else if(password === cp){
+    } else if (password === cp) {
       setIsValid(false)
     }
   }
@@ -99,87 +102,87 @@ export default SignInSide = () => {
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               {/* <LockOutlinedIcon /> */}
             </Avatar>
-           <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h5">
               Sign Up
-            </Typography>  
+            </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="username"
-                  label="User Name"
-                  name="username"
-                  
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="fname"
-                  label="First Name"
-                  name="firstName"
-                  
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="lname"
-                  label="Last Name"
-                  name="lastName"
-                  
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  error={isValid}
-                  autoComplete="current-password"
-                  onChange={(e) => {setPassword(e.target.value)}}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="passwordConfirmation"
-                  label="confirm Password"
-                  type="password"
-                  id="password"
-                  onChange={(e) => checkPasswrod(e.target.value)}
-                  error={isValid}
-                />
-                {isValid ? errorMessage('Password does not match!'): ""}
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  disabled={isValid}
-                >
-                  Sign Up
-                </Button>
-                <Grid container>
-                  <Grid item>
-                  <Link href="/"   variant="text">Already have an account ! login in</Link>
-                  </Grid>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="User Name"
+                name="username"
+
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="fname"
+                label="First Name"
+                name="firstName"
+
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="lname"
+                label="Last Name"
+                name="lastName"
+
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                error={isValid}
+                autoComplete="current-password"
+                onChange={(e) => { setPassword(e.target.value) }}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="passwordConfirmation"
+                label="confirm Password"
+                type="password"
+                id="password"
+                onChange={(e) => checkPasswrod(e.target.value)}
+                error={isValid}
+              />
+              {isValid ? errorMessage('Password does not match!') : ""}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                disabled={isValid}
+              >
+                Sign Up
+              </Button>
+              <Grid container>
+                <Grid item>
+                  <Link href="/" variant="text">Already have an account ! login in</Link>
                 </Grid>
-                <Copyright sx={{ mt: 5 }} />
-              </Box>
-           
+              </Grid>
+              <Copyright sx={{ mt: 5 }} />
+            </Box>
+
           </Box>
         </Grid>
       </Grid>

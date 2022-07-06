@@ -4,7 +4,7 @@ defmodule GraphqlReact.Email do
   use Bamboo.Phoenix, view: GraphqlReactWeb.EmailView
 
   def send_marketing_email(email,name) do
-    email =  new_email()
+    _email =  new_email()
              |> to(email)
              |> from({ Application.get_env(:graphql_react, :from_email_name), Application.get_env(:graphql_react, :from_email)})
              |> with_template(Application.get_env(:graphql_react, :registration_email_confirmation_template))
@@ -13,4 +13,26 @@ defmodule GraphqlReact.Email do
              {:ok, "sent"}
   end
 
+  def reset_password_email(%GraphqlReact.Accounts.PasswordReset{} = password_reset) do
+    _email =  new_email()
+             |> to(password_reset.user.email)
+             |> from({ Application.get_env(:graphql_react, :from_email_name), Application.get_env(:graphql_react, :from_email)})
+             |> with_template(Application.get_env(:graphql_react, :reset_password_email_template_id))
+             |> add_dynamic_field("password_code", password_reset.code)
+  end
+  def update_email(_user ,new_email,url) do
+    _email = new_email()
+      |> to(new_email)
+      |> from({ Application.get_env(:graphql_react, :from_email_name), Application.get_env(:graphql_react, :from_email)})
+      |> with_template(Application.get_env(:graphql_react, :change_email_temp_id))
+      |> add_dynamic_field("url", url)
+  end
+
+  def email_verification(email, url) do
+    _email = new_email()
+      |> to(email)
+      |> from({ Application.get_env(:graphql_react, :from_email_name), Application.get_env(:graphql_react, :from_email)})
+      |> with_template(Application.get_env(:graphql_react, :email_verification_id))
+      |> add_dynamic_field("url", url)
+  end
 end

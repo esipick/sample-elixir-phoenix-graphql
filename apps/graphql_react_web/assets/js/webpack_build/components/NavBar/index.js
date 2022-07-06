@@ -18,62 +18,46 @@ const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const NavBar = () => {
-   
-    const [user, setUser] = React.useState(null)
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
-  
-    const handleOpenNavMenu = (event) => {
-      setAnchorElNav(event.currentTarget);
-    };
-    const handleOpenUserMenu = (event) => {
-      setAnchorElUser(event.currentTarget);
-    };
-  
-    const handleCloseNavMenu = () => {
-      setAnchorElNav(null);
-    };
-  
-    const handleCloseUserMenu = () => {
-      setAnchorElUser(null);
-    };
 
-    React.useEffect(()=>{
-      
-      const user = getLSItem('USER');
-      
-      if(user){
-        setUser(user)
-      }
-    },[])
+  const [user, setUser] = React.useState(null)
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-    const logout = () => {
-      localStorage.clear()
-      window.location.href="/"
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  React.useEffect(() => {
+
+    const user = getLSItem('USER');
+
+    if (user) {
+      setUser(user)
     }
+  }, [])
+
+  const logout = () => {
+    localStorage.clear()
+    window.location.href = "/"
+  }
+  const handleSettings = () => {
+    window.location.href = "/settings"
+  }
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-             <Avatar alt="Remy Sharp" src="" />
-          </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -127,7 +111,7 @@ const NavBar = () => {
               textDecoration: 'none',
             }}
           >
-           <Avatar alt="Phoneix" src="" />
+            <Avatar alt="Phoneix" src="" />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {/* {pages.map((page) => (
@@ -140,7 +124,7 @@ const NavBar = () => {
               </Button>
             ))} */}
             <Typography sx={{ my: 2, color: 'white', display: 'block' }}>
-              { user ?  ('welcome' + '  '+ user.firstName ) : ''}
+              {user ? ('welcome' + '  ' + user.firstName) : ''}
             </Typography>
           </Box>
 
@@ -166,14 +150,14 @@ const NavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {/* {settings.map((setting) => (
-                <MenuItem  key={setting} onClick={handleCloseUserMenu}>
-                  <Typography  textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))} */}
-              <MenuItem  onClick={logout}>
-                  <Typography  textAlign="center">Logout</Typography>
-                </MenuItem>
+           
+              <MenuItem >
+                <Typography onClick={handleSettings} textAlign="center">Settings</Typography>
+              </MenuItem>
+              <MenuItem onClick={logout}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
+
 
             </Menu>
           </Box>

@@ -50,10 +50,19 @@ import SignInSide from "./webpack_build/components/auth/login";
 import Register from "./webpack_build/components/auth/register";
 import NavBar from "./webpack_build/components/NavBar/index";
 import Home from './webpack_build/pages/Home'
+import EmailVerification from './webpack_build/pages/Extras/email-verification'
+import UpdateEmailVerification from './webpack_build/pages/Extras/update-email-verification'
+import SecondaryEmailVerification from './webpack_build/pages/Extras/secondary-email-verification'
+
+import Settings from './webpack_build/pages/Settings'
 
 window.Components = {
   SignInSide,
   Register,
   Home,
-  NavBar
+  NavBar,
+  EmailVerification,
+  Settings,
+  UpdateEmailVerification,
+  SecondaryEmailVerification
 }

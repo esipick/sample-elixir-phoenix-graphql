@@ -17,13 +17,13 @@ import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { client } from '../../apollo'
 import { GET_USER_INFO } from '../../apollo/requests'
-import { setLSItem , getLSItem} from '../../utils/utils'
+import { setLSItem, getLSItem } from '../../utils/utils'
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="#">
-        Elixir React Graphql Example App 
+        Elixir React Graphql Example App
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -40,25 +40,18 @@ export default function Album() {
 
   React.useEffect(() => {
     const token = getLSItem('Access_Token')
-    if(!token){
-      window.location.href="/"
+    if (!token) {
+      window.location.href = "/"
     }
     client
-    .query({
-      query: GET_USER_INFO,
-    })
-    .then((response) => { 
-      let user = {
-        userName: response.data.getUser.username,
-        email: response.data.getUser.email,
-        firstName: response.data.getUser.firstName,
-        LastName: response.data.getUser.lastName,
-      }
-      
-      setLSItem('USER',response.data.getUser)
-    })
-    .catch((err) => console.error(err));
-  
+      .query({
+        query: GET_USER_INFO,
+      })
+      .then((response) => {
+        setLSItem('USER', response.data.getUser)
+      })
+      .catch((err) => console.error(err));
+
   }, []);
   return (
     <ThemeProvider theme={theme}>
@@ -80,7 +73,7 @@ export default function Album() {
               color="text.primary"
               gutterBottom
             >
-             Welcome To Elixir React App
+              Welcome To Elixir React App
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
               Something short and leading about the collection below—its contents,
@@ -137,7 +130,7 @@ export default function Album() {
       {/* Footer */}
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
-         
+
         </Typography>
         <Typography
           variant="subtitle1"

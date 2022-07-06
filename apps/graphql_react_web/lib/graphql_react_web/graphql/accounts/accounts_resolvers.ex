@@ -1,10 +1,14 @@
 defmodule GraphqlReactWeb.GraphQL.Accounts.AccountsResolvers do
   alias GraphqlReact.Accounts
+  alias GraphqlReact.Accounts.AccountMails
   use GraphqlReactWeb.GraphQL.Errors
+  alias GraphqlReact.Helpers
+  alias GraphqlReact.Accounts.UserEmails
+  alias GraphqlReact.Accounts.UserEmail
+  alias GraphqlReactWeb.GraphQL.EctoHelpers
 
 
   def create_user(_parent, args, _context) do
-    IO.inspect args
      case Accounts.create_user(args.input) do
       {:ok, result} ->
         Accounts.sendMail(result)
@@ -29,7 +33,78 @@ defmodule GraphqlReactWeb.GraphQL.Accounts.AccountsResolvers do
         user ->
             {:ok, user}
     end
+  end
+  def get_current_user(_parent, _args, _context), do: @not_authenticated
+
+
+  def forgot_submit(_parent, %{email: email} = _params, _context) do
+      email = String.trim(email)
+      cond do
+        email == "" ->
+          {:error, "Please enter your email"}
+
+        String.match?(email, Helpers.email_regex()) ->
+          GraphqlReact.Accounts.check_user(email)
+        true ->
+            {:error, "Invalid email format"}
+      end
+  end
+
+  def reset_password(_parent, args, _context) do
+    EctoHelpers.action_wrapped(fn ->
+        Accounts.reset_password(args)
+    end)
 end
-def get_current_user(_parent, _args, _context), do: @not_authenticated
+
+  def update_email(_parent, args, %{context: %{current_user: current_user}}) do
+    EctoHelpers.action_wrapped(fn ->
+      Accounts.update_email(args,current_user)
+  end)
+  end
+  def update_email(_parent, _args, _context), do: @not_authenticated
+
+
+  def verify_email(_parent, args, _context) do
+    EctoHelpers.action_wrapped(fn ->
+      Accounts.verfiy_email_code(args)
+  end)
+  end
+
+  def update_password(_parent, args, %{context: %{current_user: current_user}}) do
+    EctoHelpers.action_wrapped(fn ->
+      Accounts.update_password(args , current_user)
+  end)
+  end
+
+  def update_password(_parent, _args, _context), do: @not_authenticated
+
+  def add_new_email(_parent, args, %{context: %{current_user: current_user}}) do
+    EctoHelpers.action_wrapped(fn ->
+      Accounts.add_email(args , current_user)
+  end)
+  end
+
+  def add_new_email(_parent, _args, _context), do: @not_authenticated
+
+  def get_user_emails(_parent, args, %{context: %{current_user: current_user}}) do
+    EctoHelpers.action_wrapped(fn ->
+      Accounts.get_user_emails(current_user)
+  end)
+  end
+
+  def get_user_emails(_parent, _args, _context), do: @not_authenticated
+
+
+  def verify_secondary_email(_parent, args, _context) do
+    EctoHelpers.action_wrapped(fn ->
+      AccountMails.verify_secondary_email(args)
+  end)
+  end
+
+
+
+
+
+
 
 end
