@@ -3,8 +3,7 @@ defmodule GraphqlReact.Accounts.UserEmail do
   import Ecto.Changeset
 
   schema "user_email" do
-    field :secondary_email, :string
-    field :email_no, :integer
+    field :email, :string
     field :is_verified, :boolean
     field :is_primary, :boolean
 
@@ -15,9 +14,9 @@ defmodule GraphqlReact.Accounts.UserEmail do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:secondary_email, :email_no,:is_verified,:is_primary, :user_id])
-    |> validate_format(:secondary_email, ~r/@/)
-
+    |> cast(attrs, [:email, :is_verified, :is_primary, :user_id])
+    |> validate_format(:email, ~r/@/)
+    |> unique_constraint(:email, message: "already exist")
   end
 
 

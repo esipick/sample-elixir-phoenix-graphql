@@ -3,15 +3,15 @@ defmodule GraphqlReactWeb.GraphQL.Accounts.AccountsResolvers do
   alias GraphqlReact.Accounts.AccountMails
   use GraphqlReactWeb.GraphQL.Errors
   alias GraphqlReact.Helpers
-  alias GraphqlReact.Accounts.UserEmails
-  alias GraphqlReact.Accounts.UserEmail
   alias GraphqlReactWeb.GraphQL.EctoHelpers
-
+  alias GraphqlReact.Repo
 
   def create_user(_parent, args, _context) do
      case Accounts.create_user(args.input) do
       {:ok, result} ->
-        Accounts.sendMail(result)
+        IO.inspect "======"
+        IO.inspect result
+        # Accounts.sendMail(result)
         {:ok, result}
       {:error, _error, error, %{}} ->
         {:error, error}
@@ -58,7 +58,9 @@ end
 
   def update_email(_parent, args, %{context: %{current_user: current_user}}) do
     EctoHelpers.action_wrapped(fn ->
-      Accounts.update_email(args,current_user)
+      current_user
+      |> Repo.preload(:user_email)
+      |> Accounts.update_email(args)
   end)
   end
   def update_email(_parent, _args, _context), do: @not_authenticated

@@ -99,10 +99,9 @@ defmodule GraphqlReactWeb.GraphQL.Schema do
     field :user_emails, list_of(:user_email)
   end
   object :user_email do
-    field :secondary_email, :string
+    field :email, :string
     field :is_verified, :string
     field :is_primary, :string
-    field :email_no, :string
   end
 
 
