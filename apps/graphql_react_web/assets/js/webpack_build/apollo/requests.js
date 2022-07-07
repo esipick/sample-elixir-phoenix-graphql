@@ -74,8 +74,7 @@ export const GET_EMAILS = gql`
 query getUserEmails{
   getUserEmails {
     user_emails {
-      secondaryEmail
-      emailNo
+      email
       isVerified
       isPrimary
     }

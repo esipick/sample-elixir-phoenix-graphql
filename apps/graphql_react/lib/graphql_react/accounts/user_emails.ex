@@ -53,6 +53,11 @@ defmodule GraphqlReact.Accounts.UserEmails do
     |> where([user_id: ^user_id , is_primary: true])
     |> Repo.one()
   end
+  def get_secondary_email(user_id) do
+    UserEmail
+    |> where([user_id: ^user_id , is_primary: false])
+    |> Repo.all()
+  end
 
   def get_all_emails(user_id) do
     UserEmail

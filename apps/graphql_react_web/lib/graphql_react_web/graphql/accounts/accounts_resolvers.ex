@@ -82,7 +82,7 @@ end
 
   def add_new_email(_parent, args, %{context: %{current_user: current_user}}) do
     EctoHelpers.action_wrapped(fn ->
-      Accounts.add_email(args , current_user)
+      AccountMails.add_secondary_email(args , current_user)
   end)
   end
 

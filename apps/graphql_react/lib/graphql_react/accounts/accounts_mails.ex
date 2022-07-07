@@ -20,8 +20,51 @@ defmodule GraphqlReact.Accounts.AccountMails do
 
 
 
-  def verify_secondary_email(args)  do
+  def add_secondary_email(args, user) do
 
+    primary_email =  UserEmails.get_primary_email(user.id)
+    secondary_emails =  UserEmails.get_secondary_email(user.id)
+
+    email_list = secondary_emails
+      |> Enum.filter(fn(value) -> value.email == args.email end)
+      |> Enum.map(fn(filtered_value) -> filtered_value  end)
+
+    # IO.inspect user_emails
+    IO.inspect primary_email
+    IO.inspect secondary_emails
+    IO.inspect length(secondary_emails)
+    cond do
+      args.email == primary_email.email ->
+        {:error, "you have  entered your existing primary email! try a different one"}
+
+      length(secondary_emails) == 3 ->
+        {:error, "you have already  addded allowed number of emails !"}
+      length(email_list) > 0 ->
+        {:error, "This email is already added !"}
+      true ->
+        new_email = %{
+          email: args.email,
+          is_verified: false,
+          is_primary: false,
+          user_id: user.id
+        }
+        case UserEmails.add_email(new_email) do
+          {:ok, email} ->
+            {:ok , code } = Accounts.get_email_verification_code(user)
+            url = Helpers.get_client_url(user, "/settings-add-email") <> "/#{code.code}" <> "/#{email.id}"
+            IO.inspect url
+            code
+            |> Repo.preload(:user)
+            |> Email.update_email(args.email, url)
+            |> GraphqlReact.Mailer.deliver_later
+            {:ok, "Email added, please verfiy your new email"}
+          {:error, _} ->
+            {:error, "Failed to add the email"}
+        end
+      end
+  end
+
+  def verify_secondary_email(args)  do
     case Accounts.get_reset_code(args.code) do
       nil->
         {:error, "invalid code or link has expired"}

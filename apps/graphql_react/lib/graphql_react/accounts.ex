@@ -342,55 +342,7 @@ def reset_password(attrs) do
     {:ok , %{user_emails: emails }}
   end
 
-  def add_email(args, curr_user) do
 
-    {:ok , user_emails } = get_user_emails(curr_user)
-
-    email_list = user_emails.user_emails
-      |> Enum.filter(fn(value) -> value.secondary_email == args.email end)
-      |> Enum.map(fn(filtered_value) -> filtered_value  end)
-
-    cond do
-      args.email == curr_user.email ->
-        {:error, "this email is already exisits in your account"}
-
-      length(user_emails.user_emails) == 3 ->
-        {:error, "you can add upto 3 emails only !"}
-      length(email_list) > 0 ->
-        {:error, "This email is already added !"}
-      true ->
-        email_length =  cond do
-          length(user_emails.user_emails) == 0 ->
-            1
-          length(user_emails.user_emails) == 1 ->
-            2
-          length(user_emails.user_emails) == 2 ->
-            3
-        end
-        {:ok , code } = get_email_verification_code(curr_user)
-        new_email = %{
-          secondary_email: args.email,
-          email_no:  email_length,
-          is_verified: false,
-          is_primary: false,
-          user_id: curr_user.id
-        }
-
-        case UserEmails.add_email(new_email) do
-          {:ok, email} ->
-            {:ok , code } = get_email_verification_code(curr_user)
-            url = Helpers.get_client_url(curr_user, "/settings-add-email") <> "/#{code.code}" <> "/#{email.id}"
-            IO.inspect url
-            code
-            |> Repo.preload(:user)
-            |> Email.update_email(args.email, url)
-            |> GraphqlReact.Mailer.deliver_later
-            {:ok, "Email added, please verfiy your new email"}
-          {:error, _} ->
-            {:error, "Failed to add the email"}
-        end
-      end
-  end
 
   def send_email_verification_mail(email, user, path) do
 
