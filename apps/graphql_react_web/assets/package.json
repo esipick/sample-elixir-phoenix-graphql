@@ -1,4 +1,14 @@
 {
+  
+    "name": "example-app",
+    "author": "Kashan ghori",
+    "email": "email",
+    "license": "esipick",
+    "version": "0.0.1",
+    "private": true,
+  "scripts": {
+    "deploy": "cd .. && mix assets.deploy && rm -f _build/esbuild*"
+  },
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@emotion/react": "^11.9.3",
@@ -7,11 +17,12 @@
     "graphql": "^16.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-phoenix": "file:../../../deps/react_phoenix",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.3.0",
+    "react-phoenix": "file:../../../deps/react_phoenix"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-react": "^7.17.12"
+   
   }
 }

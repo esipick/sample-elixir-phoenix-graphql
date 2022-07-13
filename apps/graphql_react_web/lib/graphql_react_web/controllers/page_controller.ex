@@ -13,4 +13,19 @@ defmodule GraphqlReactWeb.PageController do
     render(conn, "home.html")
   end
 
+  def settings(conn, _params) do
+    render(conn, "settings.html")
+  end
+
+  def email_verification(conn, _params) do
+    render(conn, "email_verification.html")
+  end
+
+  def update_email(conn, _params) do
+    render(conn, "update_email.html")
+  end
+  def add_email(conn, _params) do
+    render(conn, "add_email.html")
+  end
+
 end

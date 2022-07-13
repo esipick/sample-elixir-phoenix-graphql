@@ -17,13 +17,35 @@ config :graphql_react_web, GraphqlReactWeb.Endpoint,
       load_from_system_env: true,
       url: [scheme: "https:", host: "sample-elixir-phoenix-graphql.herokuapp.com", port: 443],
       force_ssl: [rewrite_on: [:x_forwarded_proto]],
-      cache_static_manifest: "priv/static/cache_manifest.json",
+      # cache_static_manifest: "priv/static/cache_manifest.json",
       secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
 config :graphql_react_web, GraphqlReact.Repo,
        url: System.get_env("DATABASE_URL"),
        pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
        ssl: true
+
+
+
+config :graphql_react, GraphqlReact.Mailer,
+      adapter: Bamboo.SendGridAdapter,
+      api_key: System.get_env("SENDGRID_API_KEY")
+
+config :graphql_react, :jwt_expiration_minutes, String.to_integer(System.get_env("JWT_EXPIRATION_MINUTES") || "2045555666")
+
+
+config :graphql_react, :website_url, System.get_env("WEBSITE_URL") || "http://localhost:4000/email-verification"
+config :graphql_react, :react_url, System.get_env("REACT_URL") || "http://localhost:3000/email-verification"
+config :graphql_react, :angular_url, System.get_env("ANGULAR_URL") || "http://localhost:4200/email-verification"
+
+
+config :graphql_react, :registration_email_confirmation_template, System.get_env("EMAIL_CONFIRMATION_TEMP_ID")
+config :graphql_react, :from_email, System.get_env("FROM_EMAIL") || "kashan.ghori@esipick.com"
+config :graphql_react, :from_email_name, System.get_env("FROM_EMAIL_NAME") || "Esipick"
+config :graphql_react, :reset_password_email_template_id, System.get_env("RESET_PASSWORD_EMAIL_TEMPLATE_ID")
+config :graphql_react, :update_user_settings_id, System.get_env("UPDATE_USER_SETTINGS")
+config :graphql_react, :email_verification_id, System.get_env("EMAIL_VERIFICATION")
+config :graphql_react, :change_email_temp_id, System.get_env("CHANGE_EMAIL_TEMP_ID")
 
 
 # ## SSL Support
