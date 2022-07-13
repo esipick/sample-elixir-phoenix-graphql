@@ -87,4 +87,37 @@ defmodule GraphqlReact.Accounts.AccountMails do
     end
   end
 
+  def delete_email(id) do
+
+    email = UserEmails.get_email_by_email_id(id)
+    cond do
+      email.is_primary ->
+        {:error , "Can't delete email! email is primary"}
+      true ->
+        case Repo.delete(email) do
+          {:error, _} ->
+            {:error, "Failed to delete email ! try again later"}
+          {:ok , _} ->
+        {:ok, "Email Deleted Successfully"}
+        end
+    end
+  end
+
+  def set_primary_email(id , user) do
+    primary_email =  UserEmails.get_primary_email(user.id)
+    email = UserEmails.get_email_by_email_id(id)
+    cond do
+      email.is_primary ->
+        {:error , "email is already primary"}
+      email.is_verified == false ->
+        {:error , "you need to verfiy this email first !"}
+      true ->
+        UserEmails.update_email(primary_email, %{is_primary: false})
+        UserEmails.update_email(email, %{is_primary: true})
+        {:ok, "successfully set email as primary"}
+
+    end
+  end
+
+
 end

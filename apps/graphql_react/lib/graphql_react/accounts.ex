@@ -154,7 +154,7 @@ defmodule GraphqlReact.Accounts do
 
               with {:ok, user} <- Encryption.validate_password(loaded_user.user, password),
                     {:ok, token, _} = Authentication.encode_and_sign(user,%{claim: "W08aAGGsKHoc0iIdF0Bp"}, token_type: "refresh", ttl: {Application.get_env(:graphql_react, :jwt_expiration_minutes), :minutes}) do
-
+                      IO.inspect loaded_user
                   {:ok, %{:user => loaded_user, :token => token}}
               end
               loaded_user.is_primary == false ->

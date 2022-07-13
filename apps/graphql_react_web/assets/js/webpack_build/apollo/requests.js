@@ -47,6 +47,16 @@ export const ADD_EMAIL = gql`
     addEmail(email: $email)
   }
 `
+export const DELETE_EMAIL = gql`
+  mutation deleteEmail($id: Int!){
+    deleteEmail(id: $id)
+  }
+`
+export const SET_PRIMARY_EMAIL = gql`
+  mutation setPrimaryEmail($id: Int!){
+    setPrimaryEmail(id: $id)
+  }
+`
 
 
 
@@ -74,6 +84,7 @@ export const GET_EMAILS = gql`
 query getUserEmails{
   getUserEmails {
     user_emails {
+      id
       email
       isVerified
       isPrimary

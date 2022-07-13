@@ -5,12 +5,11 @@ defmodule GraphqlReactWeb.GraphQL.Accounts.AccountsResolvers do
   alias GraphqlReact.Helpers
   alias GraphqlReactWeb.GraphQL.EctoHelpers
   alias GraphqlReact.Repo
+  alias GraphqlReact.Accounts.UserEmails
 
   def create_user(_parent, args, _context) do
      case Accounts.create_user(args.input) do
       {:ok, result} ->
-        IO.inspect "======"
-        IO.inspect result
         # Accounts.sendMail(result)
         {:ok, result}
       {:error, _error, error, %{}} ->
@@ -31,7 +30,15 @@ defmodule GraphqlReactWeb.GraphQL.Accounts.AccountsResolvers do
         nil ->
             @not_found
         user ->
-            {:ok, user}
+          resp = %{
+            id: user.id,
+            username: user.username,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: UserEmails.get_primary_email(user.id).email,
+
+          }
+          {:ok, resp}
     end
   end
   def get_current_user(_parent, _args, _context), do: @not_authenticated
@@ -102,6 +109,20 @@ end
       AccountMails.verify_secondary_email(args)
   end)
   end
+
+  def delete_email(_parent, %{id: id}, %{context: %{current_user: current_user}}) do
+    EctoHelpers.action_wrapped(fn ->
+      AccountMails.delete_email(id)
+  end)
+  end
+  def delete_email(_parent, _args, _context), do: @not_authenticated
+
+  def set_primary_email(_parent, %{id: id}, %{context: %{current_user: current_user}}) do
+    EctoHelpers.action_wrapped(fn ->
+      AccountMails.set_primary_email(id ,current_user)
+  end)
+  end
+  def set_primary_email(_parent, _args, _context), do: @not_authenticated
 
 
 

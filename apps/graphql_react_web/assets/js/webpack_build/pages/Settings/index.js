@@ -59,7 +59,6 @@ function a11yProps(index) {
 const Settings = () => {
   const [color, setColor] = React.useState('black')
   const [message, setMessage] = React.useState('')
-  const [emails, setEmails] = React.useState('')
   const [value, setValue] = React.useState(0);
 
 
@@ -101,17 +100,7 @@ const Settings = () => {
     )
   }
 
-  const getEmails = () => {
-    client.query({
-      query: GET_EMAILS
-    }).then(res => {
-      console.log(res.data.getUserEmails.user_emails)
-      setEmails(res.data.getUserEmails.user_emails)
-    }).catch(err => {
-      setColor('red')
-      setMessage(err.message)
-    })
-  }
+
 
   const handleUpdateEmail = (event) => {
     event.preventDefault();
@@ -144,11 +133,10 @@ const Settings = () => {
     if (!token) {
       window.location.href = "/"
     }
-    getEmails()
   }, [])
   return (
     <Grid container spacing={2}>
-      <Grid item xs={10}>
+      <Grid item xs={12}>
         <Box sx={{ width: '100%' }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -164,7 +152,7 @@ const Settings = () => {
             <UpdatePassword />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <AddNewEmail emails={emails} />
+            <AddNewEmail  />
           </TabPanel>
         </Box>
 
