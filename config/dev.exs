@@ -76,7 +76,7 @@ config :phoenix, :stacktrace_depth, 20
 
 config :graphql_react, GraphqlReact.Mailer,
        adapter: Bamboo.SendGridAdapter,
-       api_key: "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"
+       api_key: ""
 
 config :graphql_react, :jwt_expiration_minutes, String.to_integer(System.get_env("JWT_EXPIRATION_MINUTES") || "2045555666")
 
