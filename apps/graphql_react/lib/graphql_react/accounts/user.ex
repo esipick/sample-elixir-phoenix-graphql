@@ -2,9 +2,9 @@ defmodule GraphqlReact.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias GraphqlReact.Accounts.{Encryption}
+  alias GraphqlReact.Accounts.UserEmail
 
   schema "users" do
-    field :email, :string
     field :first_name, :string
     field :last_name, :string
     field :encrypted_password, :string
@@ -13,17 +13,18 @@ defmodule GraphqlReact.Accounts.User do
     # Virtual fields
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
+
+    has_many(:user_email, UserEmail)
+
     timestamps()
   end
 
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :email, :password, :first_name, :last_name])
-    |> validate_required([:username, :email,:first_name, :last_name])
-    |> validate_format(:email, ~r/@/)
+    |> cast(attrs, [:username, :password, :first_name, :last_name])
+    |> validate_required([:username, :first_name, :last_name])
     |> validate_confirmation(:password)
-    |> unique_constraint(:email, message: "already exist")
     |> encrypt_password
   end
 

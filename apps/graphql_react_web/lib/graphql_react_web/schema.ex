@@ -67,6 +67,16 @@ defmodule GraphqlReactWeb.GraphQL.Schema do
       resolve &AccountsResolvers.add_new_email/3
     end
 
+    field :delete_email, :string do
+      arg :id, non_null(:integer)
+      resolve &AccountsResolvers.delete_email/3
+    end
+
+    field :set_primary_email, :string do
+      arg :id, non_null(:integer)
+      resolve &AccountsResolvers.set_primary_email/3
+    end
+
 
   end
 
@@ -99,10 +109,10 @@ defmodule GraphqlReactWeb.GraphQL.Schema do
     field :user_emails, list_of(:user_email)
   end
   object :user_email do
-    field :secondary_email, :string
-    field :is_verified, :string
-    field :is_primary, :string
-    field :email_no, :string
+    field :id, :integer
+    field :email, :string
+    field :is_verified, :boolean
+    field :is_primary, :boolean
   end
 
 

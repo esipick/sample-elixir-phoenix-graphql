@@ -12,13 +12,14 @@ import FormHelperText from '@mui/material/FormHelperText';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 
-import { ADD_EMAIL } from '../../apollo/requests'
+import { ADD_EMAIL, DELETE_EMAIL, GET_EMAILS, SET_PRIMARY_EMAIL } from '../../apollo/requests'
 import { client } from '../../apollo'
 
-const AddEmail = ({ emails }) => {
+const AddEmail = () => {
   const [color, setColor] = React.useState('black')
   const [message, setMessage] = React.useState('')
-  console.log(emails)
+  const [emails, setEmails] = React.useState([])
+
   const handleAddEmail = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -31,6 +32,7 @@ const AddEmail = ({ emails }) => {
       },
 
     }).then(res => {
+      getEmails()
       setMessage(res.data.addEmail)
       setColor('green')
     }).catch(err => {
@@ -39,80 +41,154 @@ const AddEmail = ({ emails }) => {
     })
 
   }
-  const renderEmails = () => {
-    if(emails.length > 0){
-      return  emails.map((ele) => {
-        return (
-          <ListItem disablePadding>
-              {ele.secondaryEmail}
-          </ListItem>
-        )
+  const getEmails = () => {
+    client.query({
+      query: GET_EMAILS,
+      fetchPolicy: "network-only"
+    }).then(res => {
+      setEmails(res.data.getUserEmails.user_emails)
+    }).catch(err => {
+      setColor('red')
+      setMessage(err.message)
+    })
+  }
+  const renderEmails = (isPrimary) => {
+    if (emails.length > 0) {
+      return emails.map((ele, i) => {
+        if (isPrimary && ele.isPrimary) {
+          return (
+            <ListItem  key={i} disablePadding>
+              {ele.email}
+            </ListItem>
+          )
+        } else if (!isPrimary && !ele.isPrimary) {
+          return (
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <ListItem key={i} disablePadding>
+                  {ele.email}
+                </ListItem>
+              </Grid>
+              <Grid spacing={2} item xs={3}>
+                <Button size="medium" color="success" onClick={() => handleSetPrimaryEmail(ele)} variant="outlined">Set Primary</Button>
+              </Grid>
+              <Grid  spacing={2} item xs={3}>
+                <Button size="medium" color="error" onClick={() => handleDeleteEmail(ele)} variant="outlined">Delete Email</Button>
+              </Grid>
+            </Grid>
+            
+          )
+        }
       })
     }
   }
+
+  handleDeleteEmail = (email) => {
+    client.mutate({
+      mutation: DELETE_EMAIL,
+      variables: {
+        id: parseInt(email.id),
+      },
+
+    }).then(res => {
+      getEmails()
+      setMessage(res.data.deleteEmail)
+      setColor('green')
+    }).catch(err => {
+      setColor('red')
+      setMessage(err.message)
+    })
+
+  }
+  handleSetPrimaryEmail = (email) => {
+    client.mutate({
+      mutation: SET_PRIMARY_EMAIL,
+      variables: {
+        id: parseInt(email.id),
+      },
+
+    }).then(res => {
+      getEmails()
+      setMessage(res.data.deleteEmail)
+      setColor('green')
+    }).catch(err => {
+      setColor('red')
+      setMessage(err.message)
+    })
+  }
+
+  React.useEffect(() => {
+    getEmails()
+  }, [])
   return (
     <Grid container spacing={2}>
-    <Grid item xs={6}>
-    <Box
-      sx={{
-        my: 8,
-        mx: 4,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'start',
-      }}
-    >
-      <Typography component="h1" variant="h5">
-        Enter a Valid Email Address
-      </Typography>
-      <Box component="form" noValidate={false} onSubmit={handleAddEmail} sx={{ mt: 1 }}>
-
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="email"
-          label="Email Address"
-          name="email"
-          type="email"
-
-        />
-
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
+      <Grid item xs={6}>
+        <Box
+          sx={{
+            my: 8,
+            mx: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'start',
+          }}
         >
-          Add email
-        </Button>
-        <FormHelperText style={{ color: color }} variant="standard" id="component-error-text">{message}</FormHelperText>
-      </Box>
-    </Box>
-    </Grid>
+          <Typography component="h1" variant="h5">
+            Enter a Valid Email Address
+          </Typography>
+          <Box component="form" noValidate={false} onSubmit={handleAddEmail} sx={{ mt: 1 }}>
 
-    <Grid item xs={6}>
-    <Box
-      sx={{
-        my: 8,
-        mx: 4,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'start',
-      }}
-    >
-      
-    <Typography component="h1" variant="h5">
-        Your current Secondary emails:
-      </Typography>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              type="email"
 
-      <List>
-        {renderEmails()}
-      </List>
-   
-    </Box>
-    </Grid>
-    
+            />
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Add email
+            </Button>
+            <FormHelperText style={{ color: color }} variant="standard" id="component-error-text">{message}</FormHelperText>
+          </Box>
+        </Box>
+      </Grid>
+
+      <Grid item xs={6}>
+        <Box
+          sx={{
+            my: 12,
+            mx: 6,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'start',
+          }}
+        >
+          <Typography component="h1" variant="h5">
+            Primary Email
+          </Typography>
+
+          <List>
+            {renderEmails(true)}
+          </List>
+          <Typography component="h1" variant="h5">
+            Your current Secondary emails:
+          </Typography>
+
+          <List style={{ width: "100%"}}>
+            {renderEmails(false)}
+          </List>
+        </Box>
+
+      </Grid>
+
     </Grid>
   )
 }

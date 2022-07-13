@@ -3,15 +3,14 @@ defmodule GraphqlReactWeb.GraphQL.Accounts.AccountsResolvers do
   alias GraphqlReact.Accounts.AccountMails
   use GraphqlReactWeb.GraphQL.Errors
   alias GraphqlReact.Helpers
-  alias GraphqlReact.Accounts.UserEmails
-  alias GraphqlReact.Accounts.UserEmail
   alias GraphqlReactWeb.GraphQL.EctoHelpers
-
+  alias GraphqlReact.Repo
+  alias GraphqlReact.Accounts.UserEmails
 
   def create_user(_parent, args, _context) do
      case Accounts.create_user(args.input) do
       {:ok, result} ->
-        Accounts.sendMail(result)
+        # Accounts.sendMail(result)
         {:ok, result}
       {:error, _error, error, %{}} ->
         {:error, error}
@@ -31,7 +30,15 @@ defmodule GraphqlReactWeb.GraphQL.Accounts.AccountsResolvers do
         nil ->
             @not_found
         user ->
-            {:ok, user}
+          resp = %{
+            id: user.id,
+            username: user.username,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: UserEmails.get_primary_email(user.id).email,
+
+          }
+          {:ok, resp}
     end
   end
   def get_current_user(_parent, _args, _context), do: @not_authenticated
@@ -58,7 +65,9 @@ end
 
   def update_email(_parent, args, %{context: %{current_user: current_user}}) do
     EctoHelpers.action_wrapped(fn ->
-      Accounts.update_email(args,current_user)
+      current_user
+      |> Repo.preload(:user_email)
+      |> Accounts.update_email(args)
   end)
   end
   def update_email(_parent, _args, _context), do: @not_authenticated
@@ -80,7 +89,7 @@ end
 
   def add_new_email(_parent, args, %{context: %{current_user: current_user}}) do
     EctoHelpers.action_wrapped(fn ->
-      Accounts.add_email(args , current_user)
+      AccountMails.add_secondary_email(args , current_user)
   end)
   end
 
@@ -100,6 +109,20 @@ end
       AccountMails.verify_secondary_email(args)
   end)
   end
+
+  def delete_email(_parent, %{id: id}, %{context: %{current_user: current_user}}) do
+    EctoHelpers.action_wrapped(fn ->
+      AccountMails.delete_email(id)
+  end)
+  end
+  def delete_email(_parent, _args, _context), do: @not_authenticated
+
+  def set_primary_email(_parent, %{id: id}, %{context: %{current_user: current_user}}) do
+    EctoHelpers.action_wrapped(fn ->
+      AccountMails.set_primary_email(id ,current_user)
+  end)
+  end
+  def set_primary_email(_parent, _args, _context), do: @not_authenticated
 
 
 
