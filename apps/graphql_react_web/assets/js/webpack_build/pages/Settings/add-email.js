@@ -63,13 +63,19 @@ const AddEmail = () => {
           )
         } else if (!isPrimary && !ele.isPrimary) {
           return (
-            <ListItem style={{ justifyContent: 'space-around'}} key={i} disablePadding>
-                {ele.email}
-                <div>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <ListItem key={i} disablePadding>
+                  {ele.email}
+                </ListItem>
+              </Grid>
+              <Grid spacing={2} item xs={3}>
                 <Button size="medium" color="success" onClick={() => handleSetPrimaryEmail(ele)} variant="outlined">Set Primary</Button>
+              </Grid>
+              <Grid  spacing={2} item xs={3}>
                 <Button size="medium" color="error" onClick={() => handleDeleteEmail(ele)} variant="outlined">Delete Email</Button>
-                </div>
-            </ListItem>
+              </Grid>
+            </Grid>
             
           )
         }
@@ -176,7 +182,7 @@ const AddEmail = () => {
             Your current Secondary emails:
           </Typography>
 
-          <List style={{ width: '100% !important'}}>
+          <List style={{ width: "100%"}}>
             {renderEmails(false)}
           </List>
         </Box>
