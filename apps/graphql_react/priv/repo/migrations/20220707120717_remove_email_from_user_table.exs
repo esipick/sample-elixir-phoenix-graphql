@@ -7,7 +7,6 @@ defmodule GraphqlReact.Repo.Migrations.RemoveEmailFromUserTable do
     end
     alter table(:user_settings) do
       remove :email_verified
-      remove :is_primary
     end
   end
 end
