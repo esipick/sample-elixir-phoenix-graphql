@@ -16,8 +16,8 @@ defmodule GraphqlReactWeb.GraphQL.Accounts.AccountsResolvers do
         {:error, error}
      end
   end
-    def login(_parent, %{email: email, password: password} = _params, _context) do
-      case Accounts.api_login(%{email: email, password: password}) do
+    def login(_parent, %{email: email, password: password, platform: platform} = _params, _context) do
+      case Accounts.api_login(%{email: email, password: password, platform: platform}) do
           {:ok, res} ->
               {:ok, res}
           _ ->

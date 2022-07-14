@@ -20,7 +20,7 @@ defmodule GraphqlReact.Email do
              |> with_template(Application.get_env(:graphql_react, :reset_password_email_template_id))
              |> add_dynamic_field("password_code", password_reset.code)
   end
-  def update_email(_user ,new_email,url) do
+  def update_email(new_email,url) do
     _email = new_email()
       |> to(new_email)
       |> from({ Application.get_env(:graphql_react, :from_email_name), Application.get_env(:graphql_react, :from_email)})

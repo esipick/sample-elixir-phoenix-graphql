@@ -6,14 +6,13 @@ defmodule GraphqlReact.Accounts.Setting do
     field :platform, :string
 
     belongs_to(:user, GraphqlReact.Accounts.User)
-
     timestamps()
   end
 
   @doc false
   def changeset(setting, attrs) do
     setting
-    |> cast(attrs, [ :platform, :user_id])
+    |> cast(attrs, [:platform, :user_id])
   end
 
 end

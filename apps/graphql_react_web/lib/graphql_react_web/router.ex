@@ -24,9 +24,8 @@ defmodule GraphqlReactWeb.Router do
     get "/register", PageController, :register
     get "/home", PageController, :home
     get "/settings", PageController, :settings
-    get "/email-verification/:userId/:code", PageController, :email_verification
-    get "/settings-update-email/:code/:emailId", PageController, :update_email
-    get "/settings-add-email/:code/:emailId", PageController, :add_email
+    get "/email-verification/:emailId/:code", PageController, :email_verification
+    get "/secondary-email-verification/:emailId/:code", PageController, :secondary_email_verification
   end
   scope "/api" do
     pipe_through :api

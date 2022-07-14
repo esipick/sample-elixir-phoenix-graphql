@@ -69,20 +69,17 @@ defmodule GraphqlReact.Accounts do
   end
 
   def add_email_and_setting(attrs, args) do
+
     case attrs do
       {:ok, user } ->
 
         case UserEmails.add_email(%{email: args.email,user_id: user.id, is_primary: true}) do
-          {:ok, _email} ->
+          {:ok, email} ->
             Settings.add_settings(%{ platform: args.platform,  user_id: user.id})
-
+            send_email_verification(user, email)
           {:error, _error} ->
             {:error, "error while creating user"}
         end
-    user
-        |> Repo.preload(:user_email)
-        |> send_email_verification
-
         {:ok, user }
       {:error, _ } ->
         {:error , "something went wrong"}
@@ -137,7 +134,7 @@ defmodule GraphqlReact.Accounts do
     User.changeset(user, attrs)
   end
 
-  def api_login(%{email: email, password: password}) do
+  def api_login(%{email: email, password: password, platform: platform}) do
 
     case get_user_by_email(email) do
 
@@ -148,13 +145,19 @@ defmodule GraphqlReact.Accounts do
           loaded_user =
             valid_email
             |> Repo.preload(:user)
+            case  Settings.get_user_settings(loaded_user.user_id) do
+              nil ->
+                Settings.add_settings(%{ platform: platform, user_id: loaded_user.user_id })
+              setting ->
+                IO.inspect setting
+                Settings.update_settings(setting, %{ platform: platform, user_id: loaded_user.user_id } )
+            end
 
           cond do
             loaded_user.is_primary ->
 
               with {:ok, user} <- Encryption.validate_password(loaded_user.user, password),
                     {:ok, token, _} = Authentication.encode_and_sign(user,%{claim: "W08aAGGsKHoc0iIdF0Bp"}, token_type: "refresh", ttl: {Application.get_env(:graphql_react, :jwt_expiration_minutes), :minutes}) do
-                      IO.inspect loaded_user
                   {:ok, %{:user => loaded_user, :token => token}}
               end
               loaded_user.is_primary == false ->
@@ -241,7 +244,6 @@ def reset_password(attrs) do
 
     email = UserEmails.get_primary_email(user.id)
 
-    IO.inspect email
     cond do
       args.email == email.email ->
         {:error, "new email is same as old email"}
@@ -257,27 +259,19 @@ def reset_password(attrs) do
             {:error, "failed to update primary email"}
 
           {:ok , email } ->
-            IO.inspect "email updated "
-            IO.inspect email
-            send_email_verification_mail(args.email,user,"/settings-update-email")
+            send_email_verification_mail(email,user)
         end
 
     end
 
   end
 
-  def send_email_verification(curr_user) do
-    user =
-      curr_user
-      |> Repo.preload(:user_email)
+  def send_email_verification(curr_user, u_email) do
 
-    email =  Enum.fetch!(user.user_email,0).email
+    {:ok , code } = get_email_verification_code(curr_user)
 
-    {:ok , code } = get_email_verification_code(user)
-
-    url = Helpers.get_client_url(user, "/email-verification") <> "/#{user.id}" <> "/#{code.code}"
-
-    Email.email_verification(email, url)
+    url = Helpers.get_client_url(curr_user, "/email-verification") <> "/#{u_email.id}" <> "/#{code.code}"
+    Email.email_verification(u_email.email, url)
     |> GraphqlReact.Mailer.deliver_later
   end
 
@@ -301,24 +295,27 @@ def reset_password(attrs) do
 
         {:error, "invalid code or link has expired"}
 
-      code->
+      code ->
 
         delete_all_existing_user_codes(code.user_id)
 
-        update_email_verified(code.user_id,true)
+        update_email_verified(attr.email_id)
 
       {:ok,  "email verified succesfully"}
 
     end
   end
 
-  def update_email_verified(userID,isVerified) do
-    setting_attrs = %{
-      email_verified: isVerified,
-      user_id: userID
+  def update_email_verified(email_id) do
+
+    email  = UserEmails.get_email_by_email_id(email_id)
+
+    change_attrs = %{
+      is_verified: true,
     }
-    Settings.get_settings_by_id(userID)
-    |> Settings.update_settings(setting_attrs)
+
+    UserEmails.update_email(email ,change_attrs )
+
   end
 
   def update_password(args, curr_user) do
@@ -344,16 +341,20 @@ def reset_password(attrs) do
 
 
 
-  def send_email_verification_mail(email, user, path) do
-
+  def send_email_verification_mail(email, user) do
     {:ok , code } = get_email_verification_code(user)
 
-    url = Helpers.get_client_url(user, path) <> "/#{code.code}"
-    IO.inspect url
-    code
-    |> Repo.preload(:user)
-    |> Email.update_email(email, url)
+    url = Helpers.get_client_url(user, "/email-verification") <> "/#{email.id}" <> "/#{code.code}"
+    email = Email.update_email(email.email, url)
     |> GraphqlReact.Mailer.deliver_later
+    case email do
+      nil ->
+        {:ok , "Error while sending verification email"}
+      bambo ->
+        {:ok, "Email Updated Succesfully, Please check your mail for verification"}
+    end
+
+
 
   end
 

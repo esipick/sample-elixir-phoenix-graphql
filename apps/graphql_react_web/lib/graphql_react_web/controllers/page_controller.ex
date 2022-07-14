@@ -20,12 +20,7 @@ defmodule GraphqlReactWeb.PageController do
   def email_verification(conn, _params) do
     render(conn, "email_verification.html")
   end
-
-  def update_email(conn, _params) do
-    render(conn, "update_email.html")
+  def secondary_email_verification(conn, _params) do
+    render(conn, "secondary_email_verification.html")
   end
-  def add_email(conn, _params) do
-    render(conn, "add_email.html")
-  end
-
 end

@@ -29,10 +29,6 @@ defmodule GraphqlReact.Accounts.AccountMails do
       |> Enum.filter(fn(value) -> value.email == args.email end)
       |> Enum.map(fn(filtered_value) -> filtered_value  end)
 
-    # IO.inspect user_emails
-    IO.inspect primary_email
-    IO.inspect secondary_emails
-    IO.inspect length(secondary_emails)
     cond do
       args.email == primary_email.email ->
         {:error, "you have  entered your existing primary email! try a different one"}
@@ -51,13 +47,19 @@ defmodule GraphqlReact.Accounts.AccountMails do
         case UserEmails.add_email(new_email) do
           {:ok, email} ->
             {:ok , code } = Accounts.get_email_verification_code(user)
-            url = Helpers.get_client_url(user, "/settings-add-email") <> "/#{code.code}" <> "/#{email.id}"
+            url = Helpers.get_client_url(user, "/secondary-email-verification") <> "/#{email.id}" <> "/#{code.code}"
             IO.inspect url
             code
             |> Repo.preload(:user)
-            |> Email.update_email(args.email, url)
+
+            e = Email.update_email(args.email, url)
             |> GraphqlReact.Mailer.deliver_later
-            {:ok, "Email added, please verfiy your new email"}
+            case e do
+              nil ->
+                {:error , "Error while sending Email"}
+              bambo ->
+                {:ok, "Email added, please verfiy your new email"}
+            end
           {:error, _} ->
             {:error, "Failed to add the email"}
         end
@@ -65,11 +67,12 @@ defmodule GraphqlReact.Accounts.AccountMails do
   end
 
   def verify_secondary_email(args)  do
+
     case Accounts.get_reset_code(args.code) do
       nil->
         {:error, "invalid code or link has expired"}
       code->
-        case  UserEmails.get_email(args.email_id) do
+        case  UserEmails.get_email_by_email_id(args.email_id) do
           nil ->
             {:error, "email not found"}
           email ->
@@ -81,6 +84,7 @@ defmodule GraphqlReact.Accounts.AccountMails do
                 {:error, "failed to verfiy email ! try again"}
               e ->
                 Accounts.delete_all_existing_user_codes(code.user_id)
+
                 {:ok, "email verified succesfully "}
             end
         end

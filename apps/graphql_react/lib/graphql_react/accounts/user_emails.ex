@@ -46,7 +46,13 @@ defmodule GraphqlReact.Accounts.UserEmails do
     |> where(email: ^email)
     |> Repo.one()
     |> Repo.preload(:user)
+  end
+  def get_user_by_email_id(id) do
 
+    UserEmail
+    |> where(id: ^id)
+    |> Repo.one()
+    |> Repo.preload(:user)
   end
   def get_primary_email(user_id) do
     UserEmail

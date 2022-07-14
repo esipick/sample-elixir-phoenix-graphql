@@ -7,11 +7,11 @@ const EmailVerification = (props) => {
   React.useEffect(() => {
 
     const { conn } = props
-    const { code, userId } = conn
+    const { code, emailId } = conn
 
     client.mutate({
       mutation: VERIFY_EMAIL,
-      variables: { code, userId: parseInt(userId) },
+      variables: { code, emailId: parseInt(emailId) },
     }).then((response) => {
       window.location.href = "/home"
     })

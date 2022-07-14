@@ -5,8 +5,8 @@ import {
 
 // # Mutations 
 export const LOGIN = gql`
-  mutation login($email: String!, $password: String!) {
-    login( email: $email, password: $password ) {
+  mutation login($email: String!, $password: String!, $platform: String!) {
+    login( email: $email, password: $password , platform: $platform) {
         user {
             id
             firstName
@@ -75,8 +75,8 @@ query getUser {
 `;
 
 export const VERIFY_EMAIL = gql`
-query verifyEmail($code: String!, $userId: Int! ) {
-  verifyEmail(code:$code, userId: $userId) 
+query verifyEmail($code: String!, $emailId: Int! ) {
+  verifyEmail(code:$code, emailId: $emailId) 
 }
 `;
 

@@ -11,7 +11,7 @@ defmodule GraphqlReactWeb.GraphQL.Schema do
 
     field :verify_email, :string do
       arg :code, non_null(:string)
-      arg :user_id, non_null(:integer)
+      arg :email_id, non_null(:integer)
       resolve &AccountsResolvers.verify_email/3
     end
     field :verify_secondary_email, :string do
@@ -35,6 +35,7 @@ defmodule GraphqlReactWeb.GraphQL.Schema do
     field :login, :session do
       arg :email, non_null(:string)
       arg :password, non_null(:string)
+      arg :platform, non_null(:string)
       resolve &AccountsResolvers.login/3
     end
 

@@ -49,7 +49,7 @@ export default SignInSide = () => {
     const data = new FormData(event.currentTarget);
     client.mutate({
       mutation: LOGIN,
-      variables: { email: data.get('email'), password: data.get('password') },
+      variables: { email: data.get('email'), password: data.get('password'), platform: "ELIXIR_REACT" },
 
     }).then((response) => {
       console.log(response.data.login.user)
