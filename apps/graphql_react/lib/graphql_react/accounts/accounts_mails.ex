@@ -57,7 +57,7 @@ defmodule GraphqlReact.Accounts.AccountMails do
             case e do
               nil ->
                 {:error , "Error while sending Email"}
-              bambo ->
+              _bambo ->
                 {:ok, "Email added, please verfiy your new email"}
             end
           {:error, _} ->

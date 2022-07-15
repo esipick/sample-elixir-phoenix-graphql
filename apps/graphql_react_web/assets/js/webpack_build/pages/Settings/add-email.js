@@ -57,26 +57,40 @@ const AddEmail = () => {
       return emails.map((ele, i) => {
         if (isPrimary && ele.isPrimary) {
           return (
-            <ListItem  key={i} disablePadding>
-              {ele.email}
-            </ListItem>
-          )
-        } else if (!isPrimary && !ele.isPrimary) {
-          return (
-            <Grid container spacing={2}>
+            <Grid style={{ paddingTop: '10px' }} container spacing={2}>
               <Grid item xs={6}>
                 <ListItem key={i} disablePadding>
                   {ele.email}
                 </ListItem>
               </Grid>
-              <Grid spacing={2} item xs={3}>
+              <Grid  spacing={2} item xs={6}>
+               <Typography component="h3" variant="h5"> Status :  { ele.isVerified ? "Verified" : "Not Verfied"} </Typography>
+              </Grid>
+
+            </Grid>
+
+
+          )
+        } else if (!isPrimary && !ele.isPrimary) {
+          return (
+            <Grid style={{ paddingTop: '10px' }} container spacing={2}>
+              <Grid item xs={4}>
+                <ListItem key={i} disablePadding>
+                  {ele.email}
+                </ListItem>
+              </Grid>
+              <Grid spacing={2} item xs={2}>
                 <Button size="medium" color="success" onClick={() => handleSetPrimaryEmail(ele)} variant="outlined">Set Primary</Button>
               </Grid>
-              <Grid  spacing={2} item xs={3}>
+              <Grid spacing={2} item xs={2}>
                 <Button size="medium" color="error" onClick={() => handleDeleteEmail(ele)} variant="outlined">Delete Email</Button>
               </Grid>
+              <Grid spacing={2} item xs={4}>
+                <Typography component="h3" variant="h5"> Status :  {ele.isVerified ? "Verified" : "Not Verfied"} </Typography>
+
+              </Grid>
             </Grid>
-            
+
           )
         }
       })
@@ -122,7 +136,7 @@ const AddEmail = () => {
   }, [])
   return (
     <Grid container spacing={2}>
-      <Grid item xs={6}>
+      <Grid item xs={4}>
         <Box
           sx={{
             my: 8,
@@ -161,7 +175,7 @@ const AddEmail = () => {
         </Box>
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid item xs={8}>
         <Box
           sx={{
             my: 12,
@@ -175,14 +189,14 @@ const AddEmail = () => {
             Primary Email
           </Typography>
 
-          <List>
+          <List style={{ width: "100%" }}>
             {renderEmails(true)}
           </List>
           <Typography component="h1" variant="h5">
             Your current Secondary emails:
           </Typography>
 
-          <List style={{ width: "100%"}}>
+          <List style={{ width: "100%" }}>
             {renderEmails(false)}
           </List>
         </Box>

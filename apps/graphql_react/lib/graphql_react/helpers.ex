@@ -2,7 +2,6 @@ defmodule GraphqlReact.Helpers do
   @moduledoc """
   Helper functions
   """
-  alias GraphqlReact.Email
   alias GraphqlReact.Accounts.Settings
   require Logger
   @doc """
