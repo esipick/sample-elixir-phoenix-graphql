@@ -57,14 +57,14 @@ const AddEmail = () => {
       return emails.map((ele, i) => {
         if (isPrimary && ele.isPrimary) {
           return (
-            <Grid style={{ paddingTop: '10px' }} container spacing={2}>
+            <Grid key={i} style={{ paddingTop: '10px' }} container spacing={2}>
               <Grid item xs={6}>
-                <ListItem key={i} disablePadding>
+                <ListItem  disablePadding>
                   {ele.email}
                 </ListItem>
               </Grid>
-              <Grid  spacing={2} item xs={6}>
-               <Typography component="h3" variant="h5"> Status :  { ele.isVerified ? "Verified" : "Not Verfied"} </Typography>
+              <Grid   item xs={6}>
+               <Typography component="h3" variant="h5"> Status :  <span style={{color: ele.isVerified ? "green" : "red"}} >{ ele.isVerified ? "Verified" : "Not Verified !"}</span> </Typography>
               </Grid>
 
             </Grid>
@@ -73,20 +73,20 @@ const AddEmail = () => {
           )
         } else if (!isPrimary && !ele.isPrimary) {
           return (
-            <Grid style={{ paddingTop: '10px' }} container spacing={2}>
+            <Grid key={i} style={{ paddingTop: '10px' }} container spacing={2}>
               <Grid item xs={4}>
-                <ListItem key={i} disablePadding>
+                <ListItem  disablePadding>
                   {ele.email}
                 </ListItem>
               </Grid>
-              <Grid spacing={2} item xs={2}>
+              <Grid  item xs={2}>
                 <Button size="medium" color="success" onClick={() => handleSetPrimaryEmail(ele)} variant="outlined">Set Primary</Button>
               </Grid>
-              <Grid spacing={2} item xs={2}>
+              <Grid  item xs={2}>
                 <Button size="medium" color="error" onClick={() => handleDeleteEmail(ele)} variant="outlined">Delete Email</Button>
               </Grid>
-              <Grid spacing={2} item xs={4}>
-                <Typography component="h3" variant="h5"> Status :  {ele.isVerified ? "Verified" : "Not Verfied"} </Typography>
+              <Grid  item xs={4}>
+                <Typography component="h3" variant="h5"> Status : <span style={{color: ele.isVerified ? "green" : "red"}} >{ ele.isVerified ? "Verified" : "Not Verified !"}</span> </Typography>
 
               </Grid>
             </Grid>
