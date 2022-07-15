@@ -34,7 +34,7 @@ config :graphql_react, GraphqlReact.Mailer,
       config :graphql_react, :jwt_expiration_minutes, String.to_integer(System.get_env("JWT_EXPIRATION_MINUTES") || "2045555666")
 
       config :graphql_react, :website_url, System.get_env("WEBSITE_URL")
-      config :graphql_react, :react_url, System.get_env("REACT_URL") ||
+      config :graphql_react, :react_url, System.get_env("REACT_URL")
       config :graphql_react, :angular_url, System.get_env("ANGULAR_URL")
 
       config :graphql_react, :registration_email_confirmation_template, System.get_env("EMAIL_CONFIRMATION_TEMP_ID")
